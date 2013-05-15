@@ -1,5 +1,6 @@
 //将数据类型的大小,通过指针传到函数中
 //有点遗憾,这种办法没法在ARM等需要内存对齐的场合使用 
+//统一使用char*类型的指针, 其它的复杂指针一概不能用的
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
