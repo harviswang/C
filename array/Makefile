@@ -1,2 +1,3 @@
+CC ?= gcc
 all:
-	c++ -Wall array.cpp
+	$(CC) -Wall array_test.c

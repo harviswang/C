@@ -329,11 +329,11 @@ unsigned char digest[16];
  /* Digests a string and prints the result.
  */
 void MD5String (string)
-char *string;
+unsigned char *string;
 {
   MD5_CTX context;
   unsigned char digest[16];
-  unsigned int len = strlen (string);
+  unsigned int len = strlen ((const char *)string);
 
   MDInit (&context);
   MDUpdate (&context, string, len);
@@ -356,30 +356,34 @@ void MD5File (char *file)
     } else 
     {
         MDInit(&context);
-        while (len = fread(buffer, 1, 1024, fp))
+        while ((len = fread(buffer, 1, 1024, fp)) != 0)
         {
             MDUpdate(&context, buffer, len);
         }
         MDFinal(digest, &context);
-        close(fp);
+        fclose(fp);
         djy_printf("MD5(%s) = ", file);
         MD5Print(digest);
         djy_printf("\n\r");
     }
 }
 /*
- * shellÖÐÊ¹ÓÃmd5ÃüÁî
+ * shellï¿½ï¿½Ê¹ï¿½ï¿½md5ï¿½ï¿½ï¿½ï¿½
  */
-bool_t sh_md5(char *param)
+bool_t sh_md5(const char *param)
 {
-	if (param == NULL)
+	if (param == NULL) {
 		return false;
-	MD5String(param);
-
-	return true;
+	} else {
+        MD5String((unsigned char *)param);
+        return true;
+	}
 }
-int main()
+
+int main(int argc, char **argv)
 {
     sh_md5("hello");
     MD5File("./md5.h");
+
+    return 0;
 }
