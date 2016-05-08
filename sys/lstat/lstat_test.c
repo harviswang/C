@@ -27,12 +27,12 @@ static void stat_dump(struct stat *sp)
 	printf("st_uid = %d\n", sp->st_uid);
 	printf("st_gid = %d\n", sp->st_gid);
 	printf("st_rdev = %d\n", sp->st_rdev);
-	printf("st_size = %d\n", sp->st_size);
+	printf("st_size = %ld\n", sp->st_size);
 	printf("st_blksize = %d\n", sp->st_blksize);
-	printf("st_blocks = %d\n", sp->st_blocks);
-	printf("st_atime = %d\n", sp->st_atime);
-	printf("st_mtime = %d\n", sp->st_mtime);
-	printf("st_ctime = %d\n", sp->st_ctime);
+	printf("st_blocks = %ld\n", sp->st_blocks);
+	printf("st_atime = %ld\n", sp->st_atime);
+	printf("st_mtime = %ld\n", sp->st_mtime);
+	printf("st_ctime = %ld\n", sp->st_ctime);
 	if (S_ISLNK(sp->st_mode)) {
 		printf("stat.st_mode indicate a link file\n");
 	}
