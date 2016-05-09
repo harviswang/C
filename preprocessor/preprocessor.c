@@ -4,7 +4,12 @@
 static void macro_as_part_of_string(void);
 /*static */int main(int argc, char **argv)
 {
+    char str[] = "aoe";
+    char *p = &str[0];
     macro_as_part_of_string();
+    printf("' ' = %d\n", ' ');
+    *(++p) = 0;
+    printf("%s\n", str);
     return 0;
 }
 
@@ -44,5 +49,5 @@ static void macro_as_part_of_string(void)
 #define WIDEN2(x) L##x
 #define WIDEN(x) WIDEN2(x)
 #define __WFILE__ WIDEN(__FILE__)
-    printf("%s\n", L"hello");
+    printf("%s\n", /*L*/"hello");
 }
