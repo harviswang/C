@@ -15,10 +15,12 @@ struct sdio_device_id {
 	/*	__attribute__((aligned(sizeof(kernel_ulong_t))));*/
 };
 
+struct regulator;
 static void sizeof_func_test();
 static void sizeof_incomplete_test();
 static void sizeof_void_test();
 static void sizeof_bitfield_test();
+static void sizeof_undefined_struct_test();
 int main(int argc, char **argv)
 {
     struct sdio_device_id id;
@@ -39,6 +41,7 @@ int main(int argc, char **argv)
     sizeof_incomplete_test();
     sizeof_void_test();
     sizeof_bitfield_test();
+    sizeof_undefined_struct_test();
     return 0;
 }
 
@@ -65,3 +68,16 @@ static void sizeof_bitfield_test()
 	/*printf("sizeof(bitfield)=%ld\n", sizeof(b.bitfield));*/
 	printf("sizeof(struct bitfield)=%ld\n", sizeof(struct bitfield));
 }
+
+struct regulator {
+    int volatage;
+    int amps;
+};
+static void sizeof_undefined_struct_test()
+{
+    struct regulator *reg;
+
+    printf("%ld\n", sizeof(typeof(*reg)));
+}
+
+

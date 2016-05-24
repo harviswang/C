@@ -1,7 +1,7 @@
-//×÷Õß : Damien Diederen<dd@crosstwine.com>
-//ÓÃCÓïÑÔÄ£ÄâlispÖĞ±Õ°ü(closure) 
-//´ËÀı×Ó,ÓÃÓÚ½Ø»ñÒ»×Ö·û´®ÖĞ,µÚÒ»¸öÌØÊâ×Ö·û(@»ò:)ºóÃæµÄÄÇ¸ö×Ö·û
-//intptr_tÔÚÍ·ÎÄ¼şstdint.hÖĞ¶¨Òå, "typedef unsigned int uintptr_t;" 
+//ï¿½ï¿½ï¿½ï¿½ : Damien Diederen<dd@crosstwine.com>
+//ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½lispï¿½Ğ±Õ°ï¿½(closure) 
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Ú½Ø»ï¿½Ò»ï¿½Ö·ï¿½ï¿½ï¿½,ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½(@ï¿½ï¿½:)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½Ö·ï¿½
+//intptr_tï¿½ï¿½Í·ï¿½Ä¼ï¿½stdint.hï¿½Ğ¶ï¿½ï¿½ï¿½, "typedef unsigned int uintptr_t;" 
 //
 #include <stdlib.h>
 #include <stdio.h>
@@ -39,12 +39,18 @@ struct closure seen_special (void *d, int c) {
 
         printf("After special %c; char: %c\n", special_c, c);
 
-        return make_closure(0, 0);
+        return make_closure(before_special, 0);
 }
 
 int main (int argc, char **argv) {
         struct closure c = make_closure(before_special, 0);
         char *v = argv[1];
+
+        if (argc < 2) {
+                printf("usage:\n");
+                printf("%s ab:c@9\n", argv[0]);
+                exit(-1);
+        }
 
         while (c.fn) {
                 state_fn f = c.fn;

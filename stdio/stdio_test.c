@@ -1,6 +1,24 @@
 #include <stdio.h>
 
+static void printf_test(void);
+static void std_in_out_err_test(void);
 int main(int argc, char **argv)
+{
+    printf_test();
+    std_in_out_err_test();
+    return 0;
+}
+
+const char warn_no_pathmtu[] =
+"WARNING: %s Path MTU Discovery may not be enabled.\n";
+
+static void printf_test(void)
+{
+    /* printf(warn_no_pathmtu ); */ /* error version */
+    printf("%s", warn_no_pathmtu );
+}
+
+static void std_in_out_err_test(void)
 {
 /*
 /bionic/libc/include/stdio.h
@@ -30,6 +48,4 @@ int main(int argc, char **argv)
     } else {
         printf("stdin/stdout/stderr are not in order\n");
     }
-    return 0;
 }
-

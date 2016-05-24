@@ -1,4 +1,4 @@
 CC ?= gcc
 
 all:
-	$(CC) -Wall stdio_test.c
+	$(CC) -Wall -Werror stdio_test.c
