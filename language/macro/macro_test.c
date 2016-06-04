@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static void gcc_version_dump_test();
 static void var_name_unchange_test();
 static void function_name_ifdef_test();
 int main(int argc, char **argv)
 {
+
     var_name_unchange_test();
 	function_name_ifdef_test();
+	gcc_version_dump_test();
 	return 0;
 }
 
@@ -43,3 +46,22 @@ static void function_name_ifdef_test()
 #endif
     barrier();
 }
+
+/*
+ * works both gcc and clang in centos 7
+ */
+static void gcc_version_dump_test()
+{
+    /*
+     * Common definitions for all gcc versions go here.
+     */
+    #define GCC_VERSION (__GNUC__ * 10000 \
+               + __GNUC_MINOR__ * 100 \
+               + __GNUC_PATCHLEVEL__)
+
+    printf("GCC_VERSION is %d\n", GCC_VERSION);
+    printf("__GNUC__ is %d\n", __GNUC__);
+    printf("__GNUC_MINOR__ is %d\n", __GNUC_MINOR__);
+    printf("__GNUC_PATCHLEVEL__ is %d\n", __GNUC_PATCHLEVEL__);
+}
+
