@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+ * assert macro
+ */
+#define LOG_ASSERT(condition, format...) \
+    do {if (!(condition)) {printf("Assert failed: " #condition ": "format);}}while(0);
+
+static void variable_argument_macro_function_test();
 static void gcc_version_dump_test();
 static void var_name_unchange_test();
 static void function_name_ifdef_test();
@@ -10,6 +17,7 @@ int main(int argc, char **argv)
     var_name_unchange_test();
 	function_name_ifdef_test();
 	gcc_version_dump_test();
+	variable_argument_macro_function_test();
 	return 0;
 }
 
@@ -65,3 +73,8 @@ static void gcc_version_dump_test()
     printf("__GNUC_PATCHLEVEL__ is %d\n", __GNUC_PATCHLEVEL__);
 }
 
+static void variable_argument_macro_function_test()
+{
+    int a = 8;
+    LOG_ASSERT(a > 9, "%d is not bigger than 9\n", a);
+}
