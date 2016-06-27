@@ -7,13 +7,14 @@
 #define LOG_ASSERT(condition, format...) \
     do {if (!(condition)) {printf("Assert failed: " #condition ": "format);}}while(0);
 
+static void compile_date_time_test();
 static void variable_argument_macro_function_test();
 static void gcc_version_dump_test();
 static void var_name_unchange_test();
 static void function_name_ifdef_test();
 int main(int argc, char **argv)
 {
-
+    compile_date_time_test();
     var_name_unchange_test();
 	function_name_ifdef_test();
 	gcc_version_dump_test();
@@ -77,4 +78,9 @@ static void variable_argument_macro_function_test()
 {
     int a = 8;
     LOG_ASSERT(a > 9, "%d is not bigger than 9\n", a);
+}
+
+static void compile_date_time_test()
+{
+    printf("compile date/time: %s %s\n", __DATE__, __TIME__);
 }

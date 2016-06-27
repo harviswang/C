@@ -2,10 +2,12 @@
 
 static void __builtin_expect_test(void);
 static void __builtin_constant_p_test(void);
+static void __builtin_popcount_test(void);
 int main(int argc, char **argv)
 {
     __builtin_expect_test();
     __builtin_constant_p_test();
+    __builtin_popcount_test();
 
     return 0;
 }
@@ -72,4 +74,15 @@ static void __builtin_constant_p_test(void)
     /* case 5: 宏调用, 会返回1 */
 #define HELP(a, b) help((a), (b))
     HELP(0x23, 0x45);
+}
+
+/*
+ * __builtin_popcount计算二进制数(32位, 类型是unsigned type)中1的个数
+ */
+static void __builtin_popcount_test(void)
+{
+    printf("%s() test..\n", __func__);
+    printf("__builtin_popcount(4)=%d\n", __builtin_popcount(4));
+    printf("__builtin_popcount(7)=%d\n", __builtin_popcount(7));
+    //printf("__builtin_popcount(0x1ffffffff)=%d\n", __builtin_popcount(0x1ffffffff));
 }

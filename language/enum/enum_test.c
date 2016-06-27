@@ -29,6 +29,7 @@ void enum_typedef_test(void)
 		A = 0,
 		B = 1,
 		C = A,
+		D,
 	} enum_me_t;
 	
 	enum_me_t a = B;
@@ -39,4 +40,9 @@ void enum_typedef_test(void)
 	} else {
 		printf("two element in an enum can NOT be equal\n");
 	}
+
+	printf("A = %d\n", A);
+	printf("B = %d\n", B);
+	printf("C = %d\n", C);
+	printf("D = %d\n", D);
 }
