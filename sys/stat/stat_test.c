@@ -1,34 +1,25 @@
-//#define __S_IFIFO
-//#define __S_IFLINK
 #include <sys/stat.h>
 #include <stdio.h>
 
-static void stat_dump(struct stat *sp);
+static void lstat_test(void);
+
 int main(int argc, char **argv)
 {
-	char *path = "/dev/random";
-	struct stat stat;
-	int err = 0;
-	
-	err = lstat(path, &stat);
-	if (!err) {
-		stat_dump(&stat);
-	}
-	
+    lstat_test();
 	return 0;
 }
 
 static void stat_dump(struct stat *sp)
 {
-	printf("st_dev = %d\n", sp->st_dev);
-	printf("st_ino = %d\n", sp->st_ino);
+	printf("st_dev = %ld\n", sp->st_dev);
+	printf("st_ino = %ld\n", sp->st_ino);
 	printf("st_mode = %d\n", sp->st_mode);
-	printf("st_nlink = %d\n", sp->st_nlink);
+	printf("st_nlink = %ld\n", sp->st_nlink);
 	printf("st_uid = %d\n", sp->st_uid);
 	printf("st_gid = %d\n", sp->st_gid);
-	printf("st_rdev = %d\n", sp->st_rdev);
+	printf("st_rdev = %ld\n", sp->st_rdev);
 	printf("st_size = %ld\n", sp->st_size);
-	printf("st_blksize = %d\n", sp->st_blksize);
+	printf("st_blksize = %ld\n", sp->st_blksize);
 	printf("st_blocks = %ld\n", sp->st_blocks);
 	printf("st_atime = %ld\n", sp->st_atime);
 	printf("st_mtime = %ld\n", sp->st_mtime);
@@ -57,4 +48,17 @@ static void stat_dump(struct stat *sp)
 	if (S_ISSOCK(sp->st_mode)) {
 		printf("stat.st_mode indicate a SOCKET file\n");
 	}
+}
+
+static void lstat_test(void)
+{
+    /* char *path = "/dev/random"; */
+    const char path[] = "/usr/share/hwdata/usb.ids";
+    struct stat stat;
+    int err = 0;
+
+    err = lstat(path, &stat);
+    if (!err) {
+        stat_dump(&stat);
+    }
 }

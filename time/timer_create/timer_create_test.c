@@ -1,10 +1,17 @@
+/*
+ *
+ */
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <time.h> /* clockid_t timer_t*/
+#include <time.h> /* clockid_t timer_t 'struct itimerspec' */
 #include <signal.h>
 #include <unistd.h>
 
+
+#ifndef __unused
+#define __unused __attribute__((unused))
+#endif
 typedef enum {false = 0, true = 1} bool;
 #define ATF_REQUIRE(condition)                         \
 do {                                                                            \
@@ -70,11 +77,17 @@ int main(int argc, char **argv)
 	  */
 	tim.it_value.tv_sec = 1;
 	tim.it_value.tv_nsec = 0;
+	tim.it_interval.tv_sec = 3; /* tim.it_interval表示循环timer */
+	tim.it_interval.tv_nsec = 0;
 
 	ATF_REQUIRE(timer_settime(t, 0, &tim, NULL) == 0);
 
 	(void)sigprocmask(SIG_UNBLOCK, &set, NULL);
 	(void)sleep(2);
+
+	while (1) {
+	    sleep(1);
+	}
 
 	ATF_REQUIRE(timer_delete(t) == 0);
 
