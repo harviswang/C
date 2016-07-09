@@ -7,6 +7,7 @@
 #define LOG_ASSERT(condition, format...) \
     do {if (!(condition)) {printf("Assert failed: " #condition ": "format);}}while(0);
 
+static void variadic_macro_test();
 static void compile_date_time_test();
 static void variable_argument_macro_function_test();
 static void gcc_version_dump_test();
@@ -14,6 +15,7 @@ static void var_name_unchange_test();
 static void function_name_ifdef_test();
 int main(int argc, char **argv)
 {
+    variadic_macro_test();
     compile_date_time_test();
     var_name_unchange_test();
 	function_name_ifdef_test();
@@ -83,4 +85,32 @@ static void variable_argument_macro_function_test()
 static void compile_date_time_test()
 {
     printf("compile date/time: %s %s\n", __DATE__, __TIME__);
+}
+
+/*
+ * 可变参数宏,-std=c89和-std=c99均支持
+ */
+#define debug(...) printf( __VA_ARGS__)
+#define asmlinkage __attribute__((regparm(0)))
+#define __user     __attribute__((noderef, address_space(1)))
+#define __SC_DECL1(t1, a1)    t1 a1
+#define __SC_DECL2(t2, a2, ...) t2 a2, __SC_DECL1(__VA_ARGS__)
+#define __SC_DECL3(t3, a3, ...) t3 a3, __SC_DECL2(__VA_ARGS__)
+#define __SC_DECL4(t4, a4, ...) t4 a4, __SC_DECL3(__VA_ARGS__)
+#define __SC_DECL5(t5, a5, ...) t5 a5, __SC_DECL4(__VA_ARGS__)
+#define __SC_DECL6(t6, a6, ...) t6 a6, __SC_DECL5(__VA_ARGS__)
+#define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
+#define SYSCALL_DEFINEx(x, sname, ...)              \
+    __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
+#define __SYSCALL_DEFINEx(x, name, ...)                 \
+    asmlinkage long sys##name(__SC_DECL##x(__VA_ARGS__))
+static void variadic_macro_test()
+{
+    debug("%d\n", 998);
+    debug("sleep");
+    /*
+    SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len,
+            unsigned, flags, struct sockaddr __user *, addr,
+            int, addr_len);
+            */
 }
