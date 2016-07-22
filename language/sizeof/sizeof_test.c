@@ -25,6 +25,7 @@ static void sizeof_undefined_struct_test();
 static void sizeof_string_test();
 static void sizeof_function_name_test();
 static void sizeof_array_test();
+static void sizeof_FILE_test();
 int main(int argc, char **argv)
 {
     struct sdio_device_id id;
@@ -49,6 +50,7 @@ int main(int argc, char **argv)
     sizeof_string_test();
     sizeof_function_name_test();
     sizeof_array_test();
+    sizeof_FILE_test();
     return 0;
 }
 
@@ -105,10 +107,28 @@ static void sizeof_function_name_test()
 
 /*
  * 字符串初始化字符数组, 会自动添加字符串结束标识符'\0'
+ * sizeof是编译阶段起作用, 因此可以用作数组大小的声明.
  */
 static void sizeof_array_test()
 {
     char str[] = "good";
     printf("sizeof(%s) = %ld\n", str, sizeof(str));
     assert(sizeof(str) == sizeof("good"));
+
+    do {
+        char string[sizeof(FILE)];
+        printf("sizeof(string) = %ld\n", sizeof(string));
+    } while (0);
+}
+
+/*
+ * 对于结构体取sizeof, 可以用结构体指针变量解引用来计算
+ * 这样做有个好处, 就是sizeof与类型名无直接关系
+ */
+static void sizeof_FILE_test()
+{
+    FILE *fp;
+
+    printf("sizeof(*fp) = %ld\n", sizeof(*fp));
+    printf("sizeof(FILE) = %ld\n", sizeof(FILE));
 }
