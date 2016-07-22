@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 /*
  * calng sizeof implementation : long long clang_Type_getSizeOf(CXType T) {}
  */
@@ -21,6 +22,9 @@ static void sizeof_incomplete_test();
 static void sizeof_void_test();
 static void sizeof_bitfield_test();
 static void sizeof_undefined_struct_test();
+static void sizeof_string_test();
+static void sizeof_function_name_test();
+static void sizeof_array_test();
 int main(int argc, char **argv)
 {
     struct sdio_device_id id;
@@ -42,6 +46,9 @@ int main(int argc, char **argv)
     sizeof_void_test();
     sizeof_bitfield_test();
     sizeof_undefined_struct_test();
+    sizeof_string_test();
+    sizeof_function_name_test();
+    sizeof_array_test();
     return 0;
 }
 
@@ -80,4 +87,28 @@ static void sizeof_undefined_struct_test()
     printf("%ld\n", sizeof(typeof(*reg)));
 }
 
+/*
+ * sizeof("hello") == 6, 包含字符串结束标识符'\0'
+ */
+static void sizeof_string_test()
+{
+    printf("sizeof(\"hello\") = %ld\n", sizeof("hello"));
+}
 
+/*
+ * sizeof(function_name) == 1 这怎么解释呢? TODO
+ */
+static void sizeof_function_name_test()
+{
+    printf("sizeof(sizeof_undefined_struct_test) = %ld\n", sizeof(sizeof_undefined_struct_test));
+}
+
+/*
+ * 字符串初始化字符数组, 会自动添加字符串结束标识符'\0'
+ */
+static void sizeof_array_test()
+{
+    char str[] = "good";
+    printf("sizeof(%s) = %ld\n", str, sizeof(str));
+    assert(sizeof(str) == sizeof("good"));
+}
