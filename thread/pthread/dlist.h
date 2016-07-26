@@ -9,6 +9,24 @@
 extern "C" {
 #endif
 
+typedef enum {
+    DLIST_RET_OK = 0,
+    DLIST_RET_ERR,
+    DLIST_RET_OOM,
+    DLIST_RET_INVALID_PARAMS
+} dlist_ret_t;
+
+/*
+ * Debug
+ */
+#define return_if_fail(p) if(!(p))            \
+do {printf("%s:%d Warning: " #p " failed.\n", \
+    __func__, __LINE__); return; } while (0)
+
+#define return_val_if_fail(p, ret) if(!(p))   \
+do {printf("%s:%d Warning: " #p " failed.\n", \
+    __func__, __LINE__); return (ret);} while(0)
+
 /*
  * 隐藏数据结构方法: 在*.h代码中声明数据结构, 在*.c中定义数据结构
  */
@@ -18,12 +36,13 @@ struct dlist;
  * 操作'struct dlist;'的方法
  */
 struct dlist* dlist_init(void);
-int dlist_add(struct dlist* list, void* data);
-int dlist_delete(struct dlist* list, void* data);
-int dlist_search(struct dlist* list, void* data);
-int dlist_destroy(struct dlist *list);
-int dlist_printf(struct dlist *list, void (*user_printf)(void *data));
-int dlist_foreach(struct dlist *list, void (*visit)(void *context, void *data), void *cxt);
+dlist_ret_t dlist_add(struct dlist* list, void* data);
+dlist_ret_t dlist_delete(struct dlist* list, void* data);
+dlist_ret_t dlist_search(struct dlist* list, void* data);
+dlist_ret_t dlist_destroy(struct dlist *list);
+dlist_ret_t dlist_printf(struct dlist *list, dlist_ret_t (*user_printf)(void *data));
+dlist_ret_t dlist_foreach(struct dlist *list, dlist_ret_t (*visit)(void *context, void *data), void *cxt);
+int dlist_length(struct dlist *list);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
