@@ -26,6 +26,7 @@ static void sizeof_string_test();
 static void sizeof_function_name_test();
 static void sizeof_array_test();
 static void sizeof_FILE_test();
+static void sizeof_basic_type_test();
 int main(int argc, char **argv)
 {
     struct sdio_device_id id;
@@ -51,6 +52,7 @@ int main(int argc, char **argv)
     sizeof_function_name_test();
     sizeof_array_test();
     sizeof_FILE_test();
+    sizeof_basic_type_test();
     return 0;
 }
 
@@ -131,4 +133,21 @@ static void sizeof_FILE_test()
 
     printf("sizeof(*fp) = %ld\n", sizeof(*fp));
     printf("sizeof(FILE) = %ld\n", sizeof(FILE));
+}
+
+/*
+ * 基本数据类型大小打印
+ */
+static void sizeof_basic_type_test()
+{
+#define SIZEOF_DUMP(type) (printf("sizeof(" #type ") = %ld\n", sizeof(type)))
+    SIZEOF_DUMP(char);
+    SIZEOF_DUMP(short int);
+    SIZEOF_DUMP(int);
+    SIZEOF_DUMP(long int);
+    SIZEOF_DUMP(long long);
+    SIZEOF_DUMP(float);
+    SIZEOF_DUMP(double);
+    SIZEOF_DUMP(long double);
+#undef SIZEOF_DUMP
 }
