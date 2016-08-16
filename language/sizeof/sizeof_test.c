@@ -27,6 +27,7 @@ static void sizeof_function_name_test();
 static void sizeof_array_test();
 static void sizeof_FILE_test();
 static void sizeof_basic_type_test();
+static void sizeof_union_test();
 int main(int argc, char **argv)
 {
     struct sdio_device_id id;
@@ -53,6 +54,8 @@ int main(int argc, char **argv)
     sizeof_array_test();
     sizeof_FILE_test();
     sizeof_basic_type_test();
+    sizeof_union_test();
+
     return 0;
 }
 
@@ -149,5 +152,29 @@ static void sizeof_basic_type_test()
     SIZEOF_DUMP(float);
     SIZEOF_DUMP(double);
     SIZEOF_DUMP(long double);
+    SIZEOF_DUMP(unsigned);
 #undef SIZEOF_DUMP
+}
+
+static void sizeof_union_test()
+{
+    struct data {
+        union {
+            union {
+                int value[128];
+                int *value_ptr;
+            } integer;
+            union {
+                long long value[64];
+                long long *value_ptr;
+            } integer64;
+            union {
+                unsigned char value[512];
+                unsigned char *value_ptr;
+            } bytes;
+        } value;
+    };
+
+    struct data dd;
+    printf("sizeof(dd.value.integer.value[0]) = %ld\n", sizeof(dd.value.integer.value[0]));
 }
