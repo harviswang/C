@@ -15,15 +15,21 @@ static void variable_argument_macro_function_test();
 static void gcc_version_dump_test();
 static void var_name_unchange_test();
 static void function_name_ifdef_test();
+static void macro_to_string_test();
+static void expression_to_string_test();
+
 int main(int argc, char **argv)
 {
     variadic_macro_test();
     compile_date_time_test();
     var_name_unchange_test();
-	function_name_ifdef_test();
-	gcc_version_dump_test();
-	variable_argument_macro_function_test();
-	return 0;
+    function_name_ifdef_test();
+    gcc_version_dump_test();
+    variable_argument_macro_function_test();
+    macro_to_string_test();
+    expression_to_string_test();
+
+    return 0;
 }
 
 /*
@@ -155,4 +161,19 @@ static void variadic_macro_test()
 {
     syscall_macro_test();
     tlv_macro_test();
+}
+
+static void macro_to_string_test()
+{
+#define _toString(x) #x
+#define toString(x) _toString(x)
+    printf("file: " __FILE__ "line:" toString(__LINE__));
+    printf("\n");
+}
+
+static void expression_to_string_test()
+{
+#define expression_to_string(x) #x
+    printf("test %s", expression_to_string(a+b));
+    printf("\n");
 }
