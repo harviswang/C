@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h> /* struct timespec; */
+/*
+ struct timespec {
+	__kernel_time_t tv_sec;
+	long            tv_nsec;
+ };
+ struct timeval {
+	__kernel_time_t      tv_sec;
+	__kernel_suseconds_t tv_usec;
+ };
+*/
 
 typedef long long s64;
 typedef int s32;
@@ -14,15 +25,30 @@ union ktime {
 };
 typedef union ktime ktime_t;		/* Kill this */
 
+static ktime_t ktime_set(const u32 sec, const u32 nsec);
 static ktime_t ktime_sub(const ktime_t lhs, const ktime_t rhs);
-static void ktime_sub_test();
 static ktime_t ktime_add(const ktime_t add1, const ktime_t add2);
+static struct timespec ktime_to_timespec(ktime_t ktime);
+static ktime_t timespec_to_ktime(struct timespec ts);
+static struct timeval ktime_to_timeval(ktime_t ktime);
+static void ktime_sub_test();
 static void ktime_add_test();
+static void ktime_to_timespec_test();
+static void timespec_to_ktime_test();
+static void ktime_to_timeval_test();
 int main(int argc, char *argv[])
 {
 	ktime_sub_test();
 	ktime_add_test();
+	ktime_to_timespec_test();
+	timespec_to_ktime_test();
+	ktime_to_timeval_test();
     return 0;
+}
+
+static ktime_t ktime_set(const u32 sec, const u32 nsec)
+{
+	return (ktime_t){.tv.sec = sec, .tv.nsec = nsec};
 }
 
 /*
@@ -104,4 +130,49 @@ static void ktime_add_test()
 	printf("NSEC_PER_SEC = %ld\n", NSEC_PER_SEC);
 	printf(" res.tv.nsec = %d\n", res.tv.nsec);
 	printf("  res.tv.sec = %d\n", res.tv.sec);
+}
+
+static struct timespec ktime_to_timespec(ktime_t ktime)
+{	
+	return (struct timespec){
+		.tv_sec  = (long)ktime.tv.sec, 
+		.tv_nsec = (long)ktime.tv.nsec};
+}
+
+static void ktime_to_timespec_test()
+{
+	ktime_t yestoday;
+	yestoday = ktime_set(1, 1000);
+	struct timespec sometime = ktime_to_timespec(yestoday);
+	
+	printf(" tv_sec = %ld \n", sometime.tv_sec);
+	printf("tv_nsec = %ld\n", sometime.tv_nsec);
+}
+
+static ktime_t timespec_to_ktime(struct timespec ts)
+{
+	return (ktime_t){.tv.sec = ts.tv_sec, .tv.nsec = ts.tv_nsec};
+}
+
+static void timespec_to_ktime_test()
+{
+	struct timespec now = {123, 456};
+	ktime_t kt = timespec_to_ktime(now);
+	printf(" tv.sec = %d\n", kt.tv.sec);
+	printf("tv.nsec = %d\n", kt.tv.nsec);
+}
+
+static struct timeval ktime_to_timeval(ktime_t ktime)
+{
+	return (struct timeval){
+		.tv_sec  = (long)ktime.tv.sec,
+		.tv_usec = (long)ktime.tv.nsec / 1000 };
+}
+
+static void ktime_to_timeval_test()
+{
+	ktime_t before = ktime_set(12, 9999);
+	struct timeval tv = ktime_to_timeval(before);
+	printf(" tv_sec = %ld\n", tv.tv_sec);
+	printf("tv_usec = %ld\n", tv.tv_usec);
 }
