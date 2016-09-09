@@ -1,3 +1,11 @@
+/*
+ * 查看c编译器预先定义宏的方法
+ * gcc/clang 查看方法:
+ * gcc -dM -E - < /dev/null
+ * clang -dM -E - < /dev/null
+ * 各种编译器预先定义宏参考:
+ * https://sourceforge.net/p/predef/wiki/Compilers/
+ */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,6 +25,8 @@ static void var_name_unchange_test();
 static void function_name_ifdef_test();
 static void macro_to_string_test();
 static void expression_to_string_test();
+static void qt_signal_slot_test();
+static void typecheck_test();
 
 int main(int argc, char **argv)
 {
@@ -28,6 +38,8 @@ int main(int argc, char **argv)
     variable_argument_macro_function_test();
     macro_to_string_test();
     expression_to_string_test();
+    qt_signal_slot_test();
+    typecheck_test();
 
     return 0;
 }
@@ -71,6 +83,7 @@ static void function_name_ifdef_test()
  */
 static void gcc_version_dump_test()
 {
+#ifdef __GNUC__
     /*
      * Common definitions for all gcc versions go here.
      */
@@ -82,6 +95,7 @@ static void gcc_version_dump_test()
     printf("__GNUC__ is %d\n", __GNUC__);
     printf("__GNUC_MINOR__ is %d\n", __GNUC_MINOR__);
     printf("__GNUC_PATCHLEVEL__ is %d\n", __GNUC_PATCHLEVEL__);
+#endif
 }
 
 static void variable_argument_macro_function_test()
@@ -176,4 +190,32 @@ static void expression_to_string_test()
 #define expression_to_string(x) #x
     printf("test %s", expression_to_string(a+b));
     printf("\n");
+}
+
+static void qt_signal_slot_test()
+{
+#define qFlagLocation(x) (x)
+#define QT_STRINGIFY2(x) #x
+#define QT_STRINGIFY(x) QT_STRINGIFY2(x)
+# define QLOCATION "\0" __FILE__ ":" QT_STRINGIFY(__LINE__)
+# define SLOT(a)     qFlagLocation("1"#a QLOCATION)
+    printf("%s\n", SLOT(a));
+}
+
+/*
+ * if type of the type of x
+ * (void)(&__dummy == &__dummy2); will generate a compile error
+ * with compile option -Wall -Werror
+ */
+#define typecheck(type, x) \
+({  type __dummy; \
+    typeof(x) __dummy2; \
+    (void)(&__dummy == &__dummy2); \
+    1; \
+})
+static void typecheck_test()
+{
+    int x = 88;
+    int y = typecheck(int, x);
+    printf("typecheck(int, x) = %d\n", y);
 }

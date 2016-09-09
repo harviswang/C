@@ -1,3 +1,2 @@
-CC := gcc
 all:
-	$(CC) -Wall macro_test.c
+	$(CC) -Wall -Werror macro_test.c

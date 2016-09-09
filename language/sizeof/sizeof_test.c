@@ -28,6 +28,8 @@ static void sizeof_array_test();
 static void sizeof_FILE_test();
 static void sizeof_basic_type_test();
 static void sizeof_union_test();
+static void sizeof_empty_struct_test();
+static void sizeof_define_test();
 int main(int argc, char **argv)
 {
     struct sdio_device_id id;
@@ -55,6 +57,8 @@ int main(int argc, char **argv)
     sizeof_FILE_test();
     sizeof_basic_type_test();
     sizeof_union_test();
+    sizeof_empty_struct_test();
+    sizeof_define_test();
 
     return 0;
 }
@@ -153,6 +157,7 @@ static void sizeof_basic_type_test()
     SIZEOF_DUMP(double);
     SIZEOF_DUMP(long double);
     SIZEOF_DUMP(unsigned);
+    SIZEOF_DUMP(__signed);
 #undef SIZEOF_DUMP
 }
 
@@ -175,6 +180,56 @@ static void sizeof_union_test()
         } value;
     };
 
+	enum power_type {
+		POWER_ON_LCD = 0x1,
+		POWER_ON_BL = 0x2,
+		POWER_OFF_LCD = 0x4,
+		POWER_OFF_BL = 0x08
+	};
+
     struct data dd;
     printf("sizeof(dd.value.integer.value[0]) = %ld\n", sizeof(dd.value.integer.value[0]));
+	
+	enum power_type pt;
+	printf("sizoef(pt) = %ld\n", sizeof(pt));
+}
+
+/*
+ * empty struct does not consume any memory space
+ */
+static void sizeof_empty_struct_test()
+{
+	typedef struct { } arch_spinlock_t;
+	int a;
+	arch_spinlock_t aoe;
+	int b;
+    
+    printf("typedef struct { } arch_spinlock_t;\n");
+    printf("int a;\n");
+    printf("arch_spinlock_t aoe;\n");
+    printf("int b;\n");
+	printf("sizeof(arch_spinlock_t) = %ld\n", sizeof(arch_spinlock_t));
+	printf("sizeof(aoe) = %ld\n", sizeof(aoe));
+	printf("&a = %p\n", &a);
+	printf("&aoe = %p\n", &aoe);
+	printf("&b = %p\n", &b);
+}
+
+/*
+ * 
+ */
+static void sizeof_define_test()
+{
+#define INTEGER 99 /* 4byts */
+    printf("#define INTEGER 99\n");
+    printf("sizeof(INTEGER) = %ld\n", sizeof(INTEGER));
+#define UNSIGNED_INTEGER 99U /* 4byts */
+    printf("#define UNSIGNED_INTEGER 99U\n");
+    printf("sizeof(UNSIGNED_INTEGER) = %ld\n", sizeof(UNSIGNED_INTEGER));
+#define LONG 99L /* 8bytes */
+    printf("#define LONG 99L\n");
+    printf("sizeof(LONG) = %ld\n", sizeof(LONG));
+#define UNSIGNED_LONG 99UL /* 8bytes */
+    printf("#define UNSIGNED_LONG 99UL\n");
+    printf("sizeof(UNSIGNED_LONG) = %ld\n", sizeof(UNSIGNED_LONG));
 }
