@@ -1,14 +1,25 @@
+/*
+ * A data structure or array is aligned in memory to the largest alignment
+ * boundary required by any data type inside it. 
+ *  __attribute__ ((__packed__))
+ * __attribute__ ((__aligned__(8)))
+ * __aligned__()
+ * #pragma pack (1)
+ * #pragma pack ()
+ */
 #include <stdio.h>
 
 static void alginment_macro_test(void);
 static void alginment_rule_test(void);
 static void alginment_rule_basictype_test(void);
 static void alginment_rule_struct_test(void);
+static void alginment_rule_struct_test2(void);
 
 int main(int argc, char **argv)
 {
     alginment_macro_test();
     alginment_rule_test();
+    alginment_rule_struct_test2();
 
 	return 0;
 }
@@ -101,4 +112,32 @@ static void alginment_rule_struct_test(void)
 
     //printf("&(stu.name[9])=%p\n", &(stu.name[9]));
     printf("(&stu + 1)=%p\n", (&stu + 1));
+}
+
+/*
+ * a struct mixed will start on an eight-byte boundary
+ */
+struct mixed {
+    char c;   /* byte 0 */
+              /* bytes 1-7 are "padding" */
+    double d; /* byte 8-15 */
+    short s;  /* byte 16-17 */
+              /* bytes 18-23 are tail "padding" */
+} __aligned__();
+
+
+struct ieee754_double_big_endian {
+    unsigned long long sign:1;
+    unsigned long long bexp:11;
+    unsigned long long manthi:52;
+};
+
+static void alginment_rule_struct_test2(void)
+{
+    struct mixed array[3];
+    printf("sizeof(struct mixed) = %ld\n", sizeof(struct mixed));
+    printf("&array[0] = %p\n", &array[0]);
+    printf("&array[1] = %p\n", &array[1]);
+    printf("&array[2] = %p\n", &array[2]);
+    printf("sizeof(struct ieee754_double_big_endian) = %ld\n", sizeof(struct ieee754_double_big_endian));
 }

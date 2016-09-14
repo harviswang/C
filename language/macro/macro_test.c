@@ -27,6 +27,7 @@ static void macro_to_string_test();
 static void expression_to_string_test();
 static void qt_signal_slot_test();
 static void typecheck_test();
+static void number_suffix_test();
 
 int main(int argc, char **argv)
 {
@@ -40,6 +41,7 @@ int main(int argc, char **argv)
     expression_to_string_test();
     qt_signal_slot_test();
     typecheck_test();
+    number_suffix_test();
 
     return 0;
 }
@@ -218,4 +220,23 @@ static void typecheck_test()
     int x = 88;
     int y = typecheck(int, x);
     printf("typecheck(int, x) = %d\n", y);
+}
+
+/*
+ * 
+ */
+static void number_suffix_test()
+{
+#define NUMBER_l 99l
+    printf("#define NUMBER_l 99l\n");
+    printf("sizoef(NUMBER_l) = %ld\n", sizeof(NUMBER_l)); /* 8 */
+#define NUMBER_L 77L
+    printf("#define NUMBER_L 77L\n");
+    printf("sizoef(NUMBER_L) = %ld\n", sizeof(NUMBER_L)); /* 8 */
+#define NUMBER_ 66
+    printf("#define NUMBER_ 66\n");
+    printf("sizoef(NUMBER_) = %ld\n", sizeof(NUMBER_)); /* 4 */
+#define NUMBER_LL 55LL
+    printf("#define NUMBER_LL 55LL\n");
+    printf("sizoef(NUMBER_LL) = %ld\n", sizeof(NUMBER_LL)); /* 8 */
 }
