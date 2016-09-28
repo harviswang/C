@@ -1,11 +1,13 @@
 #include <stdio.h>
 
-static void printf_test(void);
-static void std_in_out_err_test(void);
+static void printf_test();
+static void std_in_out_err_test();
+static void sscanf_test();
 int main(int argc, char **argv)
 {
     printf_test();
     std_in_out_err_test();
+    sscanf_test();
     return 0;
 }
 
@@ -48,4 +50,19 @@ static void std_in_out_err_test(void)
     } else {
         printf("stdin/stdout/stderr are not in order\n");
     }
+}
+
+/*
+ * sscanf()返回匹配赋值成功的数目
+ * 例子中x,y为两个匹配
+ */
+static void sscanf_test()
+{
+    char buf[] = "7 8";
+    int x;
+    int y;
+    int res = sscanf(buf, "%d %d", &x, &y);
+    printf("res = %d\n", res);
+    printf("x = %d\n", x);
+    printf("y = %d\n", y);
 }
