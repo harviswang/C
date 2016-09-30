@@ -6,8 +6,6 @@ struct cup {
     int price;
 };
 
-struct hlist_head head;
-
 int print_int(void *ctx, void *arg)
 {
     int error = 0;
@@ -29,17 +27,35 @@ int sum_price(void *ctx, void *arg)
     return error;
 }
 
+#define MAX 101
 int main(int argc, char **argv)
 {
+    struct hlist_head head = { NULL }; /* must be initialed NULL */
     int sum;
-    struct cup teacup[2] = {{{NULL, NULL}, 1}, {{NULL, NULL}, 2}};
-    hlist_add_head(&head, &teacup[0].node);
-    hlist_add_head(&head, &teacup[1].node);
-    hlist_traverse(&head, print_int, NULL);
     
+    struct cup teacup[MAX];
+    int i;
+    
+    for (i = 0; i < MAX; i ++) {
+        teacup[i].node.next = NULL;
+        teacup[i].node.pprev = NULL;
+        teacup[i].price = i;
+        
+        hlist_add_head(&head, &teacup[i].node);
+    }
+ 
+    hlist_traverse_by_node(&head, &teacup[55].node, print_int, NULL);
     sum = 0;
-    hlist_traverse(&head, sum_price, &sum);
+    hlist_traverse_by_head(&head, sum_price, &sum);
     printf("sum = %d\n", sum);
 
+    /* delete test */
+    for (i = MAX / 2; i < MAX; i++) {
+        hlist_delete_node(&teacup[i].node);
+    }
+    
+    sum = 0;
+    hlist_traverse_by_head(&head, sum_price, &sum);
+    printf("sum = %d\n", sum);
     return 0;
 }

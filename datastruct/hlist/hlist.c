@@ -37,13 +37,35 @@ void hlist_delete_node(struct hlist_node *n)
     }
 }
 
-void hlist_traverse(struct hlist_head *h, int (*callback)(void *ctx, void *arg), void *ctx)
+void hlist_traverse_by_head(struct hlist_head *h, int (*callback)(void *ctx, void *arg), void *ctx)
 {
     assert(h != NULL);
 
     struct hlist_node *n;
     for (n = h->first; n != NULL; n = n->next) {
         if ((*callback)(ctx, n)) {
+            break;
+        }
+    }
+}
+
+void hlist_traverse_by_node(struct hlist_head *h, struct hlist_node *n, int (*callback)(void *ctx, void *arg), void *ctx)
+{
+    assert(h != NULL);
+    assert(n != NULL);
+
+    struct hlist_node *next, **pprev;
+        
+    /* traverse from n to the end of the list */
+    for (next = n; next != NULL; next = next->next) {
+        if ((*callback)(ctx, next)) {
+            break;
+        }
+    }
+    
+    /* traverse from n->pprev to the head of the list */
+    for (pprev = n->pprev; pprev != &h->first ; pprev = ((struct hlist_node *)pprev)->pprev) {
+        if ((*callback)(ctx, (struct hlist_node *)pprev)) {
             break;
         }
     }
