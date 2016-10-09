@@ -11,9 +11,12 @@
 
 /*
  * assert macro
+ * LOG_ASSERT() == LOG_ASSERT2()
  */
 #define LOG_ASSERT(condition, format...) \
     do {if (!(condition)) {printf("Assert failed: " #condition ": "format);}}while(0);
+#define LOG_ASSERT2(condition, format, args...) \
+    do {if (!(condition)) {printf("Assert failed: " #condition ": "format, ##args);}}while(0);
 
 static void syscall_macro_test();
 static void tlv_macro_test();
@@ -28,6 +31,7 @@ static void expression_to_string_test();
 static void qt_signal_slot_test();
 static void typecheck_test();
 static void number_suffix_test();
+static void access_once_test();
 
 int main(int argc, char **argv)
 {
@@ -42,6 +46,7 @@ int main(int argc, char **argv)
     qt_signal_slot_test();
     typecheck_test();
     number_suffix_test();
+    access_once_test();
 
     return 0;
 }
@@ -104,6 +109,7 @@ static void variable_argument_macro_function_test()
 {
     int a = 8;
     LOG_ASSERT(a == 8, "%d is not bigger than 9\n", a);
+    LOG_ASSERT2(a != 8, "%d is not bigger than 9\n", a);
 }
 
 static void compile_date_time_test()
@@ -239,4 +245,19 @@ static void number_suffix_test()
 #define NUMBER_LL 55LL
     printf("#define NUMBER_LL 55LL\n");
     printf("sizoef(NUMBER_LL) = %ld\n", sizeof(NUMBER_LL)); /* 8 */
+}
+
+/*
+ * 需要使用 ACCESS_ONCE() 的两个条件是:
+ * 1. 在无锁的情况下访问全局变量(简单赋值操作在所有平台上都是原子性的，而加法操作则不一定)
+ * 2. 对该变量的访问可能被编译器优化成合并成一次或者拆分成多次。
+ */
+#define ACCESS_ONCE(x) (*(volatile typeof(x) *)&(x))
+static void access_once_test()
+{
+    int not_stop = 9;
+    while (ACCESS_ONCE(not_stop)) { /* not_stop maybe changed by other thread */
+        printf("ACCESS_ONCE(not_stop) = %d\n", ACCESS_ONCE(not_stop));
+        break;
+    }
 }
