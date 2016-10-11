@@ -1,0 +1,12 @@
+LOCAL_PATH:= $(call my-dir)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := signal_test.c
+LOCAL_MODULE := signal_test
+LOCAL_STATIC_LIBRARIES := libc
+LOCAL_MODULE_PATH:= $(LOCAL_PATH)
+LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_C_FLAGS := -Wall -Werror
+
+include $(BUILD_EXECUTABLE)
+

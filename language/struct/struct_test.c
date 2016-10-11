@@ -12,35 +12,32 @@ int main(int argc, char *argv[])
 }
 
 /*
- * 结构体通过{0}赋值, 其成员各个成员值均为0
- * struct aoe abc = { 0 }; 和下面的表达式等价
+ * 结构体通过{}赋值, 其成员各个成员值均为0, 仅仅针对无嵌套struct
+ * gcc/clang可行, suncc报错(syntax error:  empty initializer)
+ * 还是不用{}, 需要用的时候, 选择{0}或者{{0}}这种形式
+ * 针对有嵌套的struct,需要类似{{0}, }
+ * struct aoe abc = {}; 和下面的表达式等价
  * struct aoe abc;
  * memset(&abc, 0, sizeof(abc));
  */
 static void struct_zero_init_test()
 {
-    struct aoe {
+    struct block {
         int a;
-        int o;
-        int e;
-        char buf[10];
-    };
-    
-    struct aoe abc = { 0 };
-    int i;
+        char b;
+        int c;
 
-    assert(abc.a == 0);
-    assert(abc.o == 0);
-    assert(abc.e == 0);
-    for (i = 0; i < 10; i++) {
-        assert(abc.buf[i] == 0);
+    };
+
+    struct block abc = {0};
+    struct block xyz;
+
+    printf("sizeof(struct block) = %ld\n", sizeof(struct block));
+
+    /* test case 1 */
+    memset(&xyz, 0, sizeof(xyz));
+    if (!memcmp(&abc, &xyz, sizeof(struct block))) {
+        printf("[struct block abc = {};] == [struct block xyz; memset(&xyz, 0, sizeof(xyz));]\n");
     }
-#if defined(DEBUG)
-    printf("abc.a = %d\n", abc.a);
-    printf("abc.o = %d\n", abc.o);
-    printf("abc.e = %d\n", abc.e);
-    for (i = 0; i < 10; i++) {
-        printf("%c\n", abc.buf[i]);
-    }
-#endif
 }
+

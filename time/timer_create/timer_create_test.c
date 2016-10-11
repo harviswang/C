@@ -8,10 +8,6 @@
 #include <signal.h>
 #include <unistd.h>
 
-
-#ifndef __unused
-#define __unused __attribute__((unused))
-#endif
 typedef enum {false = 0, true = 1} bool;
 #define ATF_REQUIRE(condition)                         \
 do {                                                                            \
@@ -22,10 +18,11 @@ do {                                                                            
 
 static timer_t t;
 static bool fail = true;
-static void timer_signal_handler(int signo, siginfo_t *si, void *osi __unused)
+static void timer_signal_handler(int signo, siginfo_t *si, void *osi)
 {
 	timer_t *tp;
 	
+	(void)osi;
 	tp = si->si_value.sival_ptr;
 	if (*tp == t && signo == SIGALRM) {
 		fail = false;
@@ -35,17 +32,13 @@ static void timer_signal_handler(int signo, siginfo_t *si, void *osi __unused)
 }
 int main(int argc, char **argv)
 {
-	struct itimerspec tim;
-	struct sigaction act;
-	struct sigevent evt;
+	struct itimerspec tim = {{ 0 }, }; /* 使用0值初始化,要比memset效率高些 */
+	struct sigaction act = {{ 0 }, };
+	struct sigevent evt = {{ 0 }, };
 	sigset_t set;
 
 	t = 0;
 	fail = true;
-
-	(void)memset(&evt, 0, sizeof(struct sigevent));
-	(void)memset(&act, 0, sizeof(struct sigaction));
-	(void)memset(&tim, 0, sizeof(struct itimerspec));
 
 	/*
 	  * Set handler
@@ -84,10 +77,6 @@ int main(int argc, char **argv)
 
 	(void)sigprocmask(SIG_UNBLOCK, &set, NULL);
 	(void)sleep(2);
-
-	while (1) {
-	    sleep(1);
-	}
 
 	ATF_REQUIRE(timer_delete(t) == 0);
 

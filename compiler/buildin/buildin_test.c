@@ -74,6 +74,21 @@ static void __builtin_constant_p_test(void)
     /* case 5: 宏调用, 会返回1 */
 #define HELP(a, b) help((a), (b))
     HELP(0x23, 0x45);
+
+    /* case 6: NULL */
+    if ((ret = __builtin_constant_p(NULL))) {
+        printf("__builtin_constant_p(NULL) = %d\n", ret);
+    }
+
+    /* case 7: !variable */
+    if ((ret = __builtin_constant_p(!ret))) {
+        printf("__builtin_constant_p(!ret) = %d\n", ret);
+    }
+
+    /* case 7: !!variable */
+    if ((ret = __builtin_constant_p(!!ret))) {
+        printf("__builtin_constant_p(!!ret) = %d\n", ret);
+    }
 }
 
 /*
