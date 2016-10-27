@@ -3,11 +3,16 @@
 static void __builtin_expect_test(void);
 static void __builtin_constant_p_test(void);
 static void __builtin_popcount_test(void);
+static void __builtin_unreachable_test(void);
+static void __builtin_return_address_test(void);
+
 int main(int argc, char **argv)
 {
     __builtin_expect_test();
     __builtin_constant_p_test();
     __builtin_popcount_test();
+    __builtin_unreachable_test();
+    __builtin_return_address_test();
 
     return 0;
 }
@@ -89,6 +94,11 @@ static void __builtin_constant_p_test(void)
     if ((ret = __builtin_constant_p(!!ret))) {
         printf("__builtin_constant_p(!!ret) = %d\n", ret);
     }
+
+    /* case 8: variable & 0x03 */
+    if ((ret = __builtin_constant_p(ret & 0x03))) {
+        printf("__builtin_constant_p(ret & 0x03) = %d\n", ret);
+    }
 }
 
 /*
@@ -100,4 +110,22 @@ static void __builtin_popcount_test(void)
     printf("__builtin_popcount(4)=%d\n", __builtin_popcount(4));
     printf("__builtin_popcount(7)=%d\n", __builtin_popcount(7));
     //printf("__builtin_popcount(0x1ffffffff)=%d\n", __builtin_popcount(0x1ffffffff));
+}
+
+/*
+ * __builtin_unreachable() 在应用中调用会导致Segmentation fault (core dumped)
+ * 在linux kernel中调用会导致重启
+ */
+static void __builtin_unreachable_test(void)
+{
+   // __builtin_unreachable();
+}
+
+/*
+ * __builtin_return_address(0) return type is void*
+ */
+#define return_address() ({__builtin_return_address(0);})
+static void __builtin_return_address_test()
+{
+    printf("%s return address :%p\n", __func__, return_address());
 }

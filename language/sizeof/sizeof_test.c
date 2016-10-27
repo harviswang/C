@@ -128,6 +128,26 @@ static void sizeof_array_test()
         char string[sizeof(FILE)];
         printf("sizeof(string) = %ld\n", sizeof(string));
     } while (0);
+
+    {
+        int * oof[3][4];
+        printf("sizeof(oof) = %ld\n", sizeof(oof));
+    }
+
+    {
+        int (* uof[3])[4];
+        printf("sizeof(uof) = %ld\n", sizeof(uof));
+    }
+
+    {
+        int * risks [10]; /* [] upper than * */
+        printf("sizeof(risks) = %ld\n", sizeof(risks));
+    }
+
+    {
+        int (* rusks) [10]; /* [] equal to () */
+        printf("sizeof(rusks) = %ld\n", sizeof(rusks));
+    }
 }
 
 /*

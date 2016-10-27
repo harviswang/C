@@ -17,6 +17,10 @@ void sigtrap_handler(int x)
     printf("%s() %d x = %d\n", __func__, __LINE__, x);
 }
 
+/*
+ * x86 only deal once sigtrap_handler
+ * mips deal infinite sigtrap_handler TODO
+ */
 static void sigtrap_test(void)
 {
     signal(SIGTRAP, sigtrap_handler);

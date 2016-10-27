@@ -17,7 +17,12 @@ const char warn_no_pathmtu[] =
 static void printf_test(void)
 {
     /* printf(warn_no_pathmtu ); */ /* error version */
-    printf("%s", warn_no_pathmtu );
+    int ret = printf("%s", warn_no_pathmtu );
+    printf("return of printf is: %d\n", ret);
+
+    /* '*' 在格式符中作为field width specifier, 对应int类型 */
+    printf(" memory: %0*Lx @ %0*Lx \n", 8,  0x008f2000LL, 8, 0x00010000LL);
+    printf(" memory: %0*Lx @ %0*Lx \n", 8,  0x0006e000LL, 8, 0x00902000LL);
 }
 
 static void std_in_out_err_test(void)
