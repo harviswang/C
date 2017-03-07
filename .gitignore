@@ -4,3 +4,5 @@
 *.out
 *.a
 *nbproject*
+*.c.swp
+*.h.swp
