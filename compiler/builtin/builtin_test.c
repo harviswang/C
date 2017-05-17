@@ -1,10 +1,17 @@
 #include <stdio.h>
 
+enum {
+	false = 0,
+	true = 1
+};
+
 static void __builtin_expect_test(void);
 static void __builtin_constant_p_test(void);
 static void __builtin_popcount_test(void);
 static void __builtin_unreachable_test(void);
 static void __builtin_return_address_test(void);
+static void __builtin_clz_test(void);
+static void __builtin_memcpy_test(void);
 
 int main(int argc, char **argv)
 {
@@ -13,6 +20,8 @@ int main(int argc, char **argv)
     __builtin_popcount_test();
     __builtin_unreachable_test();
     __builtin_return_address_test();
+    __builtin_clz_test();
+    __builtin_memcpy_test();
 
     return 0;
 }
@@ -78,6 +87,7 @@ static void __builtin_constant_p_test(void)
 
     /* case 5: 宏调用, 会返回1 */
 #define HELP(a, b) help((a), (b))
+    HELP(false, true);
     HELP(0x23, 0x45);
 
     /* case 6: NULL */
@@ -128,4 +138,33 @@ static void __builtin_unreachable_test(void)
 static void __builtin_return_address_test()
 {
     printf("%s return address :%p\n", __func__, return_address());
+}
+
+/*
+ * __builtin_clz calculate how many 0 bit in a number from right to left
+ * __builtin_clz(8) = 28
+ */
+static void __builtin_clz_test(void)
+{
+	int x = 8;
+	int y = 8 * sizeof(x) - __builtin_clz(x);
+	printf("8 is composed by %d bits\n", y);
+}
+
+/*
+ * __builtin_memcpy(dest, src, length)
+ */
+static void __builtin_memcpy_test()
+{
+	char a[5] = {1, 2, 3, 4, 5};
+	char b[5] = { 0 };
+	int i;
+
+	__builtin_memcpy(b, a, 5);
+	for (i = 0; i < 5; i++) {
+		if (a[i] != b[i]) {
+			printf("Error line:%d func:%s\n",
+					__LINE__, __PRETTY_FUNCTION__);
+		}
+	}
 }

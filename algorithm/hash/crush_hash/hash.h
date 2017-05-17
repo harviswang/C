@@ -7,7 +7,10 @@
 # include "crush_compat.h"
 #endif
 
+typedef unsigned char __u8;
+typedef unsigned short __u16;
 typedef unsigned int __u32;
+typedef int __s32;
 
 #define CRUSH_HASH_RJENKINS1   0
 

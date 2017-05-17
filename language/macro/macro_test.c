@@ -189,7 +189,9 @@ static void macro_to_string_test()
 {
 #define _toString(x) #x
 #define toString(x) _toString(x)
-    printf("file: " __FILE__ "line:" toString(__LINE__));
+    int xyz = 10;
+    printf("file: " __FILE__ "line:" toString(__LINE__) "\n");
+    printf(toString(xyz) " = %d\n", xyz);
     printf("\n");
 }
 

@@ -1,3 +1,2 @@
-CC ?= gcc
 all:
-	$(CC) -O2 -Wall buildin_test.c
+	$(CC) -Wall -Werror builtin_test.c
