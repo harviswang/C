@@ -46,11 +46,17 @@ int main(int argc, char *argv[])
 		
 		ticks = time(NULL);
 		snprintf(buff, sizeof(buff), "%.24s\r\n", ctime(&ticks));
-		if (write(conn_fd, buff, strlen(buff)) < 0) {
-			fprintf(stderr, "write failed:%s\n", strerror(errno));
-			return -1;
+		int i = 0;
+		while ( i < strlen(buff) ) {
+			if ( write(conn_fd, &buff[i], 1) < 0 ) {
+				fprintf(stderr, "write failed:%s\n", strerror(errno));
+				return -1;
+			} else {
+				i++;
+			}
 		}
 
 		close(conn_fd);
+		fprintf(stdout, "write %d times\n", i);
 	}
 }

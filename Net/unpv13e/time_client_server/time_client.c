@@ -38,11 +38,14 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	int count = 0;
 	while ( (n = read(sock_fd, recv_line, MAXLINE)) > 0) {
 		recv_line[n] = 0;
 		if (fputs(recv_line, stdout) == EOF) {
 			fprintf(stderr, "fputs error:%s\n", strerror(errno));
 			return -1;
+		} else {
+			count++;
 		}
 	}
 
@@ -51,6 +54,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	fprintf(stdout, "read %d times\n", count);
 	return 0;
 }
 
