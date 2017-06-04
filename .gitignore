@@ -2,6 +2,7 @@
 *.o
 *.xml
 *.out
+*.out.*
 *.a
 *nbproject*
 *.c.swp
