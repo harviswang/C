@@ -52,9 +52,11 @@ int main(int argc, char *argv[])
 	if (n < 0) {
 		fprintf(stderr, "read error:%s\n", strerror(errno));
 		return -1;
+	} else {
+		fprintf(stdout, "n = %d\n", n);
+		fprintf(stdout, "read %d times\n", count);
+		fprintf(stdout, "sizeof(struct sockaddr_in) = %ld\n", sizeof(struct sockaddr_in));
+		return 0;
 	}
-
-	fprintf(stdout, "read %d times\n", count);
-	return 0;
 }
 

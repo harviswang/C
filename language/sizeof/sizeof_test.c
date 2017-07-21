@@ -172,6 +172,7 @@ static void sizeof_basic_type_test()
     SIZEOF_DUMP(short int);
     SIZEOF_DUMP(int);
     SIZEOF_DUMP(long int);
+    SIZEOF_DUMP(long unsigned int);
     SIZEOF_DUMP(long long);
     SIZEOF_DUMP(float);
     SIZEOF_DUMP(double);
