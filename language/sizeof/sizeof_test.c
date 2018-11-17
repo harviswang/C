@@ -30,6 +30,7 @@ static void sizeof_basic_type_test();
 static void sizeof_union_test();
 static void sizeof_empty_struct_test();
 static void sizeof_define_test();
+static void sizeof_aligned_test();
 int main(int argc, char **argv)
 {
     struct sdio_device_id id;
@@ -59,6 +60,7 @@ int main(int argc, char **argv)
     sizeof_union_test();
     sizeof_empty_struct_test();
     sizeof_define_test();
+    sizeof_aligned_test();
 
     return 0;
 }
@@ -253,4 +255,14 @@ static void sizeof_define_test()
 #define UNSIGNED_LONG 99UL /* 8bytes */
     printf("#define UNSIGNED_LONG 99UL\n");
     printf("sizeof(UNSIGNED_LONG) = %ld\n", sizeof(UNSIGNED_LONG));
+}
+
+static void sizeof_aligned_test()
+{
+typedef unsigned short T_us16_64 __attribute__((aligned(8)));
+struct boundary {
+    T_us16_64 t_array[13];
+};
+    printf("sizeof(T_us16_64) = %ld\n", sizeof(T_us16_64));
+    printf("sizeof(struct boundary) = %ld\n", sizeof(struct boundary));
 }
